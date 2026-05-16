@@ -11,13 +11,13 @@ module.exports = {
   },
   flags: [EffectFlag.BUFF],
   state: {
-    magnitude: 10,
+    magnitude: 10, 
   },
   listeners: {
     updateTick: function () {
       // pools that regenerate over time
       const regens = [
-        { pool: 'health', modifier: this.target.isInCombat() ? 0 : 1 },
+        { pool: 'health', modifier: this.target.isInCombat() ? 0.25 : 1 },
         // energy and mana recovers 50% faster than health
         { pool: 'energy', modifier: this.target.isInCombat() ? 0.25 : 1.5 },
         { pool: 'mana', modifier: this.target.isInCombat() ? 0.25 : 1.5 },
@@ -31,7 +31,7 @@ module.exports = {
         const poolMax = this.target.getMaxAttribute(regen.pool);
         const amount = Math.round((poolMax / 10) * regen.modifier);
         const heal = new Heal(regen.pool, amount, this.target, this, {
-          hidden: true,
+          hidden: this.current >= poolMax,
         });
         heal.commit(this.target);
       }
